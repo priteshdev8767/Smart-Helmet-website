@@ -1,0 +1,60 @@
+{
+  "rules": {
+    ".read": "auth != null",
+    ".write": false,
+
+    "admins": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": false
+      }
+    },
+
+    "users": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || root.child('admins').child(auth.uid).val() === true)",
+        ".write": "auth != null && (auth.uid === $uid || root.child('admins').child(auth.uid).val() === true)",
+        ".validate": "newData.hasChildren(['email'])"
+      }
+    },
+
+    "adminAuditLogs": {
+      ".read": "auth != null && root.child('admins').child(auth.uid).val() === true",
+      "$id": {
+        ".write": "auth != null && root.child('admins').child(auth.uid).val() === true"
+      }
+    },
+
+    "smartHelmet": {
+      ".read": "auth != null",
+      ".write": "auth != null && root.child('admins').child(auth.uid).val() === true",
+
+      "live": {
+        ".read": "auth != null",
+        ".write": "auth != null && root.child('admins').child(auth.uid).val() === true"
+      },
+      "history": {
+        ".read": "auth != null",
+        "$id": {
+          ".write": "auth != null && root.child('admins').child(auth.uid).val() === true"
+        }
+      },
+      "alcoholEvents": {
+        ".read": "auth != null",
+        "$id": {
+          ".write": "auth != null && root.child('admins').child(auth.uid).val() === true"
+        }
+      },
+      "accidentEvents": {
+        ".read": "auth != null",
+        "$id": {
+          ".write": "auth != null && root.child('admins').child(auth.uid).val() === true"
+        }
+      },
+      "connectionTest": {
+        ".read": "auth != null",
+        ".write": "auth != null && root.child('admins').child(auth.uid).val() === true"
+      }
+    }
+  }
+}
